@@ -105,11 +105,19 @@ namespace Getter
                 {
                     if (hardware.HardwareType == HardwareType.CPU)
                     {
+                        int index = 1;
                         foreach (var sensor in hardware.Sensors)
                         {
                             if (sensor.SensorType == SensorType.Temperature)
                             {
-                                dataGridView1.Rows.Add("CPU Temperature", $"{sensor.Value} °C");
+                                if (index == 7)
+                                {
+                                    dataGridView1.Rows.Add($"CPU Core Package", $"{sensor.Value} °C");
+                                }
+                                else
+                                {
+                                    dataGridView1.Rows.Add($"CPU Core {index++}", $"{sensor.Value} °C");
+                                }
                             }
                         }
                     }
@@ -124,6 +132,8 @@ namespace Getter
 
         private void button_start_Click(object sender, EventArgs e)
         {
+            Form2 form2 = new Form2();
+            form2.Show();
             string selectedProcessor = comboBox1.SelectedItem?.ToString();
             if (!string.IsNullOrEmpty(selectedProcessor) && selectedProcessor.Equals("CPU", StringComparison.OrdinalIgnoreCase))
             {
