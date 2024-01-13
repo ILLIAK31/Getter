@@ -96,38 +96,38 @@ namespace Getter
                     dataGridView1.Rows.Add(item, Convert.ToString(obj2[item]));
                 }
             }
-            try
-            {
-                OpenHardwareMonitor.Hardware.Computer computer = new OpenHardwareMonitor.Hardware.Computer();
-                computer.CPUEnabled = true;
-                computer.Open();
-                foreach (var hardware in computer.Hardware)
-                {
-                    if (hardware.HardwareType == HardwareType.CPU)
-                    {
-                        int index = 1;
-                        foreach (var sensor in hardware.Sensors)
-                        {
-                            if (sensor.SensorType == SensorType.Temperature)
-                            {
-                                if (index == 7)
-                                {
-                                    dataGridView1.Rows.Add($"CPU Core Package", $"{sensor.Value} °C");
-                                }
-                                else
-                                {
-                                    dataGridView1.Rows.Add($"CPU Core {index++}", $"{sensor.Value} °C");
-                                }
-                            }
-                        }
-                    }
-                }
-                computer.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            //try
+            //{
+            //    OpenHardwareMonitor.Hardware.Computer computer = new OpenHardwareMonitor.Hardware.Computer();
+            //    computer.CPUEnabled = true;
+            //    computer.Open();
+            //    foreach (var hardware in computer.Hardware)
+            //    {
+            //        if (hardware.HardwareType == HardwareType.CPU)
+            //        {
+            //            int index = 1;
+            //            foreach (var sensor in hardware.Sensors)
+            //            {
+            //                if (sensor.SensorType == SensorType.Temperature)
+            //                {
+            //                    if (index == 7)
+            //                    {
+            //                        dataGridView1.Rows.Add($"CPU Core Package", $"{sensor.Value} °C");
+            //                    }
+            //                    else
+            //                    {
+            //                        dataGridView1.Rows.Add($"CPU Core {index++}", $"{sensor.Value} °C");
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+            //    computer.Close();
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //}
         }
 
         private void button_start_Click(object sender, EventArgs e)
