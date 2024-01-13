@@ -6,8 +6,10 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 
 namespace Getter
 {
@@ -15,15 +17,38 @@ namespace Getter
     {
         private OpenHardwareMonitor.Hardware.Computer computer;
         static int index = 1;
+        static int Count = 0;
         public Form2()
         {
             InitializeComponent();
             computer = new OpenHardwareMonitor.Hardware.Computer { CPUEnabled = true };
             computer.Open();
-
+            foreach (var hardwareItem in computer.Hardware)
+            {
+                if (hardwareItem.HardwareType == HardwareType.CPU)
+                {
+                    hardwareItem.Update();
+                    foreach (var sensor in hardwareItem.Sensors)
+                    {
+                        if (sensor.SensorType == SensorType.Temperature)
+                        {
+                            Count++;
+                            if (index == 7)
+                            {
+                                dataGridView1.Columns.Add("Core", $"CPU Core Package");
+                                index = 0;
+                            }
+                            else
+                            {
+                                dataGridView1.Columns.Add("Core", $"CPU Core #{index++}");
+                            }
+                        }
+                    }
+                }
+            }
             // Set up a timer to update the temperature every second
-            Timer timer = new Timer();
-            timer.Interval = 1000; // 1000 milliseconds = 1 second
+            System.Windows.Forms.Timer time = new System.Windows.Forms.Timer();
+            timer.Interval = 300; // 1000 milliseconds = 1 second
             timer.Tick += Timer_Tick;
             timer.Start();
         }
@@ -31,7 +56,10 @@ namespace Getter
         {
             // Get CPU temperature and update the label
             float cpuTemperature = GetCpuTemperature();
-            dataGridView1.Columns.Add($"CPU Core #{index++}", $" {cpuTemperature} °C");
+            dataGridView1.Rows[0].Cells[index++].Value = $" {cpuTemperature} °C";
+            dataGridView1.Refresh();
+            if (index == Count)
+                index = 0;
             //dataGridView1.Rows.Add($" {cpuTemperature} °C");
         }
 
