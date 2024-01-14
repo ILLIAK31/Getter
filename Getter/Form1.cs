@@ -91,6 +91,17 @@ namespace Getter
             "VideoArchitecture", "VideoMemoryType", "VideoMode", "VideoModeDescription", 
             "VideoProcessor"
         };
+        static List<string> list3 = new List<string>
+        {
+            "BankLabel", "Capacity", "Caption", "ConfiguredClockSpeed", 
+            "ConfiguredVoltage", "CreationClassName", "DataWidth", "Description", 
+            "DeviceLocator", "FormFactor", "HotSwappable", "InstallDate", 
+            "InterleaveDataDepth", "InterleavePosition", "Manufacturer", "MaxVoltage",
+            "MemoryType", "MinVoltage", "Model", "Name", "OtherIdentifyingInfo", 
+            "PartNumber", "PositionInRow", "PoweredOn", "Removable", "Replaceable", 
+            "SerialNumber", "SKU", "SMBIOSMemoryType", "Speed", "Status", "Tag", 
+            "TotalWidth", "TypeDetail", "Version"
+        };
         public Form1()
         {
             InitializeComponent();
@@ -100,6 +111,7 @@ namespace Getter
         {
             comboBox1.Items.Add("CPU");
             comboBox1.Items.Add("GPU");
+            comboBox1.Items.Add("RAM");
         }
         void CPU_INFO()
         {
@@ -117,55 +129,38 @@ namespace Getter
                     dataGridView1.Rows.Add(item, Convert.ToString(obj2[item]));
                 }
             }
-            //try
-            //{
-            //    OpenHardwareMonitor.Hardware.Computer computer = new OpenHardwareMonitor.Hardware.Computer();
-            //    computer.CPUEnabled = true;
-            //    computer.Open();
-            //    foreach (var hardware in computer.Hardware)
-            //    {
-            //        if (hardware.HardwareType == HardwareType.CPU)
-            //        {
-            //            int index = 1;
-            //            foreach (var sensor in hardware.Sensors)
-            //            {
-            //                if (sensor.SensorType == SensorType.Temperature)
-            //                {
-            //                    if (index == 7)
-            //                    {
-            //                        dataGridView1.Rows.Add($"CPU Core Package", $"{sensor.Value} °C");
-            //                    }
-            //                    else
-            //                    {
-            //                        dataGridView1.Rows.Add($"CPU Core {index++}", $"{sensor.Value} °C");
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
-            //    computer.Close();
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //}
         }
         void GPU_INFO()
         {
             dataGridView1.AutoGenerateColumns = false;
-            dataGridView1.Columns.Add("CategoryColumn", "AcceleratorCapabilities");
+            dataGridView1.Columns.Add("CategoryColumn", "GPU");
+            dataGridView1.Columns.Add("ValueColumn", "Value");
             ManagementObjectSearcher obj = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController");
+
             foreach (ManagementObject obj2 in obj.Get())
             {
-                dataGridView1.Columns.Add("CategoryColumn", Convert.ToString(obj2["AcceleratorCapabilities"]));
-            }
-            foreach (ManagementObject obj2 in obj.Get())
-            {
-                foreach (string item in list2)
+                foreach (PropertyData property in obj2.Properties)
                 {
-                    dataGridView1.Rows.Add(item, Convert.ToString(obj2[item]));
+                    dataGridView1.Rows.Add(property.Name, Convert.ToString(property.Value));
                 }
             }
+        }
+        void RAM_INFO()
+        {
+            dataGridView1.AutoGenerateColumns = false;
+            dataGridView1.Columns.Add("CategoryColumn", "RAM");
+            dataGridView1.Columns.Add("ValueColumn", "Value");
+
+            ManagementObjectSearcher obj = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PhysicalMemory");
+
+            foreach (ManagementObject obj2 in obj.Get())
+            {
+                foreach (PropertyData property in obj2.Properties)
+                {
+                    dataGridView1.Rows.Add(property.Name, Convert.ToString(property.Value));
+                }
+            }
+
         }
 
         private void button_start_Click(object sender, EventArgs e)
@@ -193,6 +188,15 @@ namespace Getter
                 }
                 GPU_INFO();
             }
+            else if (!string.IsNullOrEmpty(selectedProcessor) && selectedProcessor.Equals("RAM", StringComparison.OrdinalIgnoreCase))
+            {
+                comboBox2.Items.Add("Attributes");
+                foreach (string item in list3)
+                {
+                    comboBox2.Items.Add(item);
+                }
+                RAM_INFO();
+            }
         }
 
         private void button_end_Click(object sender, EventArgs e)
@@ -215,6 +219,14 @@ namespace Getter
             else if (!string.IsNullOrEmpty(selectedProcessor) && selectedProcessor2.Equals("GPU", StringComparison.OrdinalIgnoreCase))
             {
                 ManagementObjectSearcher obj = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController");
+                foreach (ManagementObject obj2 in obj.Get())
+                {
+                    MessageBox.Show(selectedProcessor + " : " + Convert.ToString(obj2[selectedProcessor]));
+                }
+            }
+            else if (!string.IsNullOrEmpty(selectedProcessor) && selectedProcessor2.Equals("RAM", StringComparison.OrdinalIgnoreCase))
+            {
+                ManagementObjectSearcher obj = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PhysicalMemory");
                 foreach (ManagementObject obj2 in obj.Get())
                 {
                     MessageBox.Show(selectedProcessor + " : " + Convert.ToString(obj2[selectedProcessor]));
