@@ -71,6 +71,26 @@ namespace Getter
                 "Version",
                 "VirtualizationFirmwareEnabled"
         };
+        static List<string> list2 = new List<string>
+        {
+            "AdapterCompatibility", "AdapterDACType", "AdapterRAM", 
+            "Availability", "CapabilityDescriptions", "Caption", 
+            "ColorTableEntries", "ConfigManagerErrorCode", "ConfigManagerUserConfig", 
+            "CreationClassName", "CurrentBitsPerPixel", "CurrentHorizontalResolution", 
+            "CurrentNumberOfColors", "CurrentNumberOfColumns", "CurrentNumberOfRows", 
+            "CurrentRefreshRate", "CurrentScanMode", "CurrentVerticalResolution", 
+            "Description", "DeviceID", "DeviceSpecificPens", "DitherType", 
+            "DriverDate", "DriverVersion", "ErrorCleared", "ErrorDescription", 
+            "ICMIntent", "ICMMethod", "InfFilename", "InfSection", "InstallDate", 
+            "InstalledDisplayDrivers", "LastErrorCode", "MaxMemorySupported", 
+            "MaxNumberControlled", "MaxRefreshRate", "MinRefreshRate", "Monochrome",
+            "Name", "NumberOfColorPlanes", "NumberOfVideoPages", "PNPDeviceID", 
+            "PowerManagementCapabilities", "PowerManagementSupported", "ProtocolSupported", 
+            "ReservedSystemPaletteEntries", "SpecificationVersion", "Status", "StatusInfo", 
+            "SystemCreationClassName", "SystemName", "SystemPaletteEntries", "TimeOfLastReset", 
+            "VideoArchitecture", "VideoMemoryType", "VideoMode", "VideoModeDescription", 
+            "VideoProcessor"
+        };
         public Form1()
         {
             InitializeComponent();
@@ -79,6 +99,7 @@ namespace Getter
         private void Form1_Load(object sender, EventArgs e)
         {
             comboBox1.Items.Add("CPU");
+            comboBox1.Items.Add("GPU");
         }
         void CPU_INFO()
         {
@@ -129,20 +150,48 @@ namespace Getter
             //    MessageBox.Show(ex.Message);
             //}
         }
+        void GPU_INFO()
+        {
+            dataGridView1.AutoGenerateColumns = false;
+            dataGridView1.Columns.Add("CategoryColumn", "AcceleratorCapabilities");
+            ManagementObjectSearcher obj = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController");
+            foreach (ManagementObject obj2 in obj.Get())
+            {
+                dataGridView1.Columns.Add("CategoryColumn", Convert.ToString(obj2["AcceleratorCapabilities"]));
+            }
+            foreach (ManagementObject obj2 in obj.Get())
+            {
+                foreach (string item in list2)
+                {
+                    dataGridView1.Rows.Add(item, Convert.ToString(obj2[item]));
+                }
+            }
+        }
 
         private void button_start_Click(object sender, EventArgs e)
         {
-            Form2 form2 = new Form2();
-            form2.Show();
             string selectedProcessor = comboBox1.SelectedItem?.ToString();
             if (!string.IsNullOrEmpty(selectedProcessor) && selectedProcessor.Equals("CPU", StringComparison.OrdinalIgnoreCase))
             {
+                Form2 form2 = new Form2();
+                form2.Show();
                 comboBox2.Items.Add("AddressWidth");
                 foreach (string item in list)
                 {
                     comboBox2.Items.Add(item);
                 }
                 CPU_INFO();
+            }
+            else if (!string.IsNullOrEmpty(selectedProcessor) && selectedProcessor.Equals("GPU", StringComparison.OrdinalIgnoreCase))
+            {
+                Form3 form3 = new Form3();
+                form3.Show();
+                comboBox2.Items.Add("AcceleratorCapabilities");
+                foreach (string item in list2)
+                {
+                    comboBox2.Items.Add(item);
+                }
+                GPU_INFO();
             }
         }
 
@@ -154,9 +203,18 @@ namespace Getter
         private void button_search_Click(object sender, EventArgs e)
         {
             string selectedProcessor = comboBox2.SelectedItem?.ToString();
-            if (!string.IsNullOrEmpty(selectedProcessor))
+            string selectedProcessor2 = comboBox1.SelectedItem?.ToString();
+            if (!string.IsNullOrEmpty(selectedProcessor) && selectedProcessor2.Equals("CPU", StringComparison.OrdinalIgnoreCase))
             {
                 ManagementObjectSearcher obj = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_Processor");
+                foreach (ManagementObject obj2 in obj.Get())
+                {
+                    MessageBox.Show(selectedProcessor + " : " + Convert.ToString(obj2[selectedProcessor]));
+                }
+            }
+            else if (!string.IsNullOrEmpty(selectedProcessor) && selectedProcessor2.Equals("GPU", StringComparison.OrdinalIgnoreCase))
+            {
+                ManagementObjectSearcher obj = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController");
                 foreach (ManagementObject obj2 in obj.Get())
                 {
                     MessageBox.Show(selectedProcessor + " : " + Convert.ToString(obj2[selectedProcessor]));
