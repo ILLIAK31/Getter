@@ -112,6 +112,7 @@ namespace Getter
             comboBox1.Items.Add("CPU");
             comboBox1.Items.Add("GPU");
             comboBox1.Items.Add("RAM");
+            comboBox1.Items.Add("Drivers");
         }
         void CPU_INFO()
         {
@@ -162,7 +163,6 @@ namespace Getter
             }
 
         }
-
         private void button_start_Click(object sender, EventArgs e)
         {
             string selectedProcessor = comboBox1.SelectedItem?.ToString();
@@ -196,6 +196,11 @@ namespace Getter
                     comboBox2.Items.Add(item);
                 }
                 RAM_INFO();
+            }
+            else if (!string.IsNullOrEmpty(selectedProcessor) && selectedProcessor.Equals("Drivers", StringComparison.OrdinalIgnoreCase))
+            {
+                Form4 form4 = new Form4();
+                form4.Show();
             }
         }
 
