@@ -36,6 +36,7 @@
             this.button_end = new System.Windows.Forms.Button();
             this.button_search = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.button_system = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -110,14 +111,25 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(685, 608);
+            this.dataGridView1.Size = new System.Drawing.Size(685, 671);
             this.dataGridView1.TabIndex = 7;
+            // 
+            // button_system
+            // 
+            this.button_system.Location = new System.Drawing.Point(43, 643);
+            this.button_system.Name = "button_system";
+            this.button_system.Size = new System.Drawing.Size(237, 64);
+            this.button_system.TabIndex = 8;
+            this.button_system.Text = "System";
+            this.button_system.UseVisualStyleBackColor = true;
+            this.button_system.Click += new System.EventHandler(this.button_system_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1025, 656);
+            this.ClientSize = new System.Drawing.Size(1025, 739);
+            this.Controls.Add(this.button_system);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.button_search);
             this.Controls.Add(this.button_end);
@@ -144,6 +156,7 @@
         private System.Windows.Forms.Button button_end;
         private System.Windows.Forms.Button button_search;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Button button_system;
     }
 }
 

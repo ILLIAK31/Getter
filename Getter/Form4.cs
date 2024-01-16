@@ -40,33 +40,8 @@ namespace Getter
                 // Wait for the process to finish
                 process.WaitForExit();
 
-                // Split the output into lines
-                string[] lines = output.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-
-                // Create a DataTable to store driver information
-                DataTable driverTable = new DataTable();
-                driverTable.Columns.Add("Module Name");
-                driverTable.Columns.Add("Display Name");
-                driverTable.Columns.Add("Driver Type");
-                driverTable.Columns.Add("Link Date");
-
-                // Iterate through the lines and add rows to the DataTable
-                for (int i = 1; i < lines.Length; i++) // Start from index 1 to skip the header line
-                {
-                    string[] columns = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (columns.Length >= 4)
-                    {
-                        driverTable.Rows.Add(
-                            columns[0],     // Module Name
-                            columns[1],     // Display Name
-                            columns[2],     // Driver Type
-                            columns[3]      // Link Date
-                        );
-                    }
-                }
-
-                // Bind the DataTable to the DataGridView
-                dataGridView1.DataSource = driverTable;
+                // Display the output in a TextBox (you can use any control of your choice)
+                textBox1.Text = output;
             }
             catch (Exception ex)
             {
