@@ -46,10 +46,12 @@ The app provides different forms to display:
 ## 📁 Project Structure Images
 
 ### 🧠 Main Interface
-![Main UI](images/main-ui.png)
+![Main UI](images/Img1.png)
 
-### 🌡 CPU Temperature
-![CPU Temperature](images/cpu-temp.png)
+### 🌡 CPU Information
+![CPU Information](images/Img2.png)
 
-### 🎮 GPU Chart
-![GPU Chart](images/gpu-chart.png)
+### 🎮 List of devices
+![List of devices](images/Img3.png)
+
+![Info](images/Img4.png)
